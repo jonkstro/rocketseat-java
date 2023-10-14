@@ -51,6 +51,7 @@ public class UserModel implements Serializable {
     }
 
     public void setUsername(String username) {
+        // TODO: Adicionar um toLowerCase na hora de adicionar
         this.username = username;
     }
 
