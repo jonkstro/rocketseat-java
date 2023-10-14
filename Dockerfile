@@ -10,6 +10,8 @@ COPY . .
 RUN apt-get install maven -y
 RUN mvn clean install
 
+FROM openjdk:21-jdk-slim
+
 # Rodar a aplicação na porta 8080
 EXPOSE 8080
 
