@@ -53,9 +53,23 @@ public class TaskController {
     // localhost:8080/tasks/1234563216549-bv-da123
     @PutMapping("/{id}")
     public ResponseEntity update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id) {
-        var idUser = request.getAttribute("idUser");
         // Vai buscar a task pelo ID, caso não achar vai retornar null
         var task = repository.findById(id).orElse(null);
+
+        var idUser = request.getAttribute("idUser");
+
+        // Se a tarefa não existir:
+        if (task == null) {
+            return ResponseEntity.badRequest().body("Tarefa não encontrada");
+
+        }
+
+        // Se o id de usuário da task for diferente do id passado na request no login:
+        // Só pode alterar a tarefa se for o dono da tarefa
+        if (!task.getIdUser().equals(idUser)) {
+            return ResponseEntity.badRequest().body("Usuário não tem permissão para alterar essa tarefa");
+        }
+
         // Vai mesclar os dados vazios com os já existentes
         Utils.copyNonNullProperties(taskModel, task);
         // Vai salvar a task com os dados já mesclados
